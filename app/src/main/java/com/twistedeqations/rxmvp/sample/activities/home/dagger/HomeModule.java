@@ -1,9 +1,11 @@
 package com.twistedeqations.rxmvp.sample.activities.home.dagger;
 
 import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
-import com.twistedeqations.rxmvp.sample.app.dagger.AppScope;
+
+import com.twistedeqations.rxmvp.sample.activities.home.mvp.HomeModel;
+import com.twistedeqations.rxmvp.sample.activities.home.mvp.HomePresenter;
+import com.twistedeqations.rxmvp.sample.activities.home.mvp.HomeView;
+import com.twistedeqations.rxmvp.sample.app.network.GithubNetwork;
 import dagger.Module;
 import dagger.Provides;
 
@@ -16,10 +18,21 @@ public class HomeModule {
     this.activity = activity;
   }
 
-  //@HomeScope
-  //@Provides
-  //public Context context() {
-  //  //return context;
-  //}
+  @Provides
+  @HomeScope
+  public HomeView view() {
+    return new HomeView(activity);
+  }
+  @Provides
+  @HomeScope
+  public HomeModel model(GithubNetwork githubNetwork) {
+    return new HomeModel(activity, githubNetwork);
+  }
+
+  @Provides
+  @HomeScope
+  public HomePresenter homePresenter(HomeView homeView, HomeModel model) {
+    return new HomePresenter(homeView, model);
+  }
 
 }
